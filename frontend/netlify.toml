@@ -1,0 +1,9 @@
+[build]
+  base = "/frontend"  # Indica que la configuración de construcción está en la carpeta "frontend"
+  publish = "frontend/build"  # La carpeta de salida después de construir
+  command = "cd frontend && npm install && npm run build"  # Comandos para construir el proyecto
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
