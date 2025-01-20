@@ -1,3 +1,5 @@
+[build.environment]
+NODE_VERSION = "20"
 [build]
   base = "/frontend"  # Indica que la configuración de construcción está en la carpeta "frontend"
   publish = "frontend/build"  # La carpeta de salida después de construir
