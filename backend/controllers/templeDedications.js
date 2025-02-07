@@ -14,6 +14,8 @@ const getAll = async (req, res) => {
   res.status(200).json(result);
 };
 
+console.log(JSON.stringify(getAll));
+
 const createDedication = async (req, res) => {
 //#swagger.tags=['Temple_Dedications'] 
   const newDedication = {
