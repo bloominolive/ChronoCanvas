@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronoCanvas API - Documentación</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --text-color: #1f2937;
+            --light-bg: #f3f4f6;
+            --border-color: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #4b5563;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #4b5563;
+            margin-bottom: 1rem;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            color: white;
+            background-color: var(--primary-color);
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+
+        .button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .button.secondary {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .button.secondary:hover {
+            background-color: var(--light-bg);
+        }
+
+        .api-endpoints {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .endpoint-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .endpoint-list li {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .endpoint-list li:last-child {
+            border-bottom: none;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ChronoCanvas API</h1>
+            <p class="subtitle">Una API robusta para la gestión de registros históricos de la Iglesia de Jesucristo de los Santos de los Últimos Días</p>
+        </header>
+
+        <div class="features">
+            <div class="feature-card">
+                <h2>Registros Históricos</h2>
+                <p>Accede y gestiona registros históricos importantes de la Iglesia, con soporte para fechas, descripciones y referencias.</p>
+            </div>
+
+            <div class="feature-card">
+                <h2>Dedicaciones de Templos</h2>
+                <p>Consulta información detallada sobre las dedicaciones de templos, incluyendo fechas y autoridades oficiantes.</p>
+            </div>
+
+            <div class="feature-card">
+                <h2>Autenticación Segura</h2>
+                <p>Sistema de autenticación robusto con soporte para JWT y OAuth 2.0 a través de GitHub.</p>
+            </div>
+        </div>
+
+        <div class="api-endpoints">
+            <h2>Endpoints Principales</h2>
+            <ul class="endpoint-list">
+                <li><strong>GET /ldsChurchHistory</strong> - Obtener registros históricos</li>
+                <li><strong>GET /templeDedications</strong> - Consultar dedicaciones de templos</li>
+                <li><strong>POST /auth/register</strong> - Registro de usuarios</li>
+                <li><strong>POST /auth/login</strong> - Inicio de sesión</li>
+            </ul>
+        </div>
+
+        <div class="buttons">
+            <a href="/swagger/api-docs" class="button">Documentación API</a>
+            <a href="/auth/github" class="button secondary">Iniciar Sesión con GitHub</a>
+        </div>
+
+        <footer>
+            <p>© 2025 ChronoCanvas - Sistema de Registros Históricos</p>
+        </footer>
+    </div>
+</body>
+</html>
