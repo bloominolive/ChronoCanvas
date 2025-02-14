@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 import MultiDateEntry from "../components/multidate-entry";
 import { useFetchOnDemand } from "../api-access/get-ai-data-on-demand";
 import DataDisplay from "../components/data-display";
 import LoadingSpinner from "../components/loading-spinner";
 import PaintApp from "../components/paint";
 import SvgDisplay from "../components/svg-display";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, ProgressBar } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaintbrush, faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 
 export default function DualDateComparison() {
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate(); 
 
-  // Left column: state and API hook
   const {
     data: leftData,
     loading: leftLoading,
@@ -22,7 +21,6 @@ export default function DualDateComparison() {
   } = useFetchOnDemand();
   const [leftDate, setLeftDate] = useState(null);
 
-  // Right column: state and API hook
   const {
     data: rightData,
     loading: rightLoading,
@@ -31,7 +29,8 @@ export default function DualDateComparison() {
   } = useFetchOnDemand();
   const [rightDate, setRightDate] = useState(null);
 
-  // Set today's date on initial render for both sides, but don't trigger API calls.
+  const [compatibilityPercentage, setCompatibilityPercentage] = useState(0);
+
   useEffect(() => {
     const today = new Date();
     const formattedToday = `${String(today.getMonth() + 1).padStart(2, "0")}/${String(
@@ -41,7 +40,6 @@ export default function DualDateComparison() {
     setRightDate(formattedToday);
   }, []);
 
-  // Only trigger API calls when the user clicks the Paint button.
   const handleSubmit = () => {
     if (leftDate) {
       setLeftBirthDate(leftDate);
@@ -51,12 +49,29 @@ export default function DualDateComparison() {
     }
   };
 
-  // Show a spinner if either side is loading
+  const calculateCompatibility = () => {
+    if (leftData && rightData) {
+      const commonAttributes = [
+        'birthstone', 
+        'zodiac', 
+        'chineseZodiac', 
+        'birthFlower'
+      ];
+      const totalAttributes = commonAttributes.length;
+      const commonCount = commonAttributes.filter(attr => leftData[attr] === rightData[attr]).length;
+      const percentage = (commonCount / totalAttributes) * 100;
+      setCompatibilityPercentage(percentage);
+    }
+  };
+
+  useEffect(() => {
+    calculateCompatibility();
+  }, [leftData, rightData]);
+
   if (leftLoading || rightLoading) return <LoadingSpinner />;
 
   return (
     <>
-      {/* Back Button Positioned in Top Left */}
       <div style={{position: 'absolute', top: '230px', left: '30px'}}>
         <Button onClick={() => navigate("/")} className="text-light fw-bold">
           <FontAwesomeIcon icon={faChevronLeft} className="me-2" /> Back
@@ -72,7 +87,6 @@ export default function DualDateComparison() {
         </small>
       </div>
 
-      {/* Button at the top that triggers handleSubmit */}
       <div className="text-center mt-3 p-3">
         <Button onClick={handleSubmit} className="submit-button p-3">
           <FontAwesomeIcon icon={faPaintbrush} /> Paint!
@@ -81,7 +95,6 @@ export default function DualDateComparison() {
 
       <Container className="my-5">
         <Row>
-          {/* Left Side */}
           <Col md={6} className="pr-md-3">
             <MultiDateEntry
               onDateSelect={(date) => {
@@ -198,6 +211,17 @@ export default function DualDateComparison() {
           </Col>
         </Row>
       </Container>
+
+      {/* Compatibility Section */}
+      {leftData && rightData && (
+        <Container className="my-5">
+          <h2 className="text-center">Compatibility Score</h2>
+          <ProgressBar now={compatibilityPercentage} label={`${compatibilityPercentage.toFixed(0)}%`} />
+          <p className="text-center">
+            This percentage indicates how many attributes are shared between the two dates.
+          </p>
+        </Container>
+      )}
     </>
   );
 }
