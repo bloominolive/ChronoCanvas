@@ -65,32 +65,37 @@ export default function RegisterPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate all fields
-    const newErrors = {};
-    Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
-    });
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    if (!isFormValid()) {
       return;
     }
 
     try {
-      const response = await axios.post('https://chronocanvas-api.onrender.com/auth/register', {
+      // Formatear la fecha antes de enviarla
+      const formattedDate = new Date(formData.birthDate).toISOString();
+
+      const requestData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        birthDate: formData.birthDate
+        birthDate: formattedDate
+      };
+
+      const response = await axios.post('https://chronocanvas-api.onrender.com/users/', requestData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
 
-      if (response.data) {
+      if (response.status === 201) {
         navigate('/login');
       }
     } catch (error) {
-      setSubmitError(error.response?.data?.message || 'Registration failed');
+      console.error('Registration error:', error);
+      setSubmitError(
+        error.response?.data?.message || 
+        'Registration failed. Please try again.'
+      );
     }
   };
 
@@ -101,7 +106,7 @@ export default function RegisterPage() {
 
         {submitError && <Alert variant="danger">{submitError}</Alert>}
 
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} noValidate>
           <Form.Group className="mb-3">
             <Form.Label>First Name</Form.Label>
             <Form.Control
@@ -110,6 +115,7 @@ export default function RegisterPage() {
               value={formData.firstName}
               onChange={handleChange}
               isInvalid={!!errors.firstName}
+              required
             />
             <Form.Control.Feedback type="invalid">{errors.firstName}</Form.Control.Feedback>
           </Form.Group>
@@ -122,6 +128,7 @@ export default function RegisterPage() {
               value={formData.lastName}
               onChange={handleChange}
               isInvalid={!!errors.lastName}
+              required
             />
             <Form.Control.Feedback type="invalid">{errors.lastName}</Form.Control.Feedback>
           </Form.Group>
@@ -134,6 +141,7 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={handleChange}
               isInvalid={!!errors.email}
+              required
             />
             <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
           </Form.Group>
@@ -146,6 +154,7 @@ export default function RegisterPage() {
               value={formData.birthDate}
               onChange={handleChange}
               isInvalid={!!errors.birthDate}
+              required
             />
             <Form.Control.Feedback type="invalid">{errors.birthDate}</Form.Control.Feedback>
           </Form.Group>
@@ -158,6 +167,7 @@ export default function RegisterPage() {
               value={formData.password}
               onChange={handleChange}
               isInvalid={!!errors.password}
+              required
             />
             <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
           </Form.Group>
@@ -170,6 +180,7 @@ export default function RegisterPage() {
               value={formData.confirmPassword}
               onChange={handleChange}
               isInvalid={!!errors.confirmPassword}
+              required
             />
             <Form.Control.Feedback type="invalid">{errors.confirmPassword}</Form.Control.Feedback>
           </Form.Group>
