@@ -8,8 +8,7 @@ import LoginPage from './pages/login';
 import RegisterPage from './pages/register';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import Routes from './routes';
-import Navbar from './components/navbar';
+
 
 
 export default function App() {
