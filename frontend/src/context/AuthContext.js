@@ -1,7 +1,7 @@
 // context/AuthContext.js
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null); // Agregado 'export' aquí
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
