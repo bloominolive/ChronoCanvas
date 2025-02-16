@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Importar el hook useAuth
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Usar el hook useAuth
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -42,11 +40,13 @@ export default function LoginPage() {
       );
 
       if (response.data && response.data.token) {
+        // Guardar el token
         localStorage.setItem('token', response.data.token);
+        // Guardar información del usuario si viene en la respuesta
         if (response.data.user) {
-          // Usar la función login del contexto
-          login(response.data.user);
+          localStorage.setItem('user', JSON.stringify(response.data.user));
         }
+        // Redirigir al home
         navigate('/');
       }
     } catch (err) {
