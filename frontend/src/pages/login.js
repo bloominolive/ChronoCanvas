@@ -10,6 +10,7 @@ export default function LoginPage() {
     password: ''
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,16 +23,16 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
 
     try {
-      // Usando GET con los parámetros en la URL
-      const response = await axios.get(
+      const response = await axios.post(
         'https://chronocanvas-api.onrender.com/auth/login',
         {
-          params: {
-            email: formData.email,
-            password: formData.password
-          },
+          email: formData.email,
+          password: formData.password
+        },
+        {
           headers: {
             'Content-Type': 'application/json'
           }
@@ -41,12 +42,21 @@ export default function LoginPage() {
       if (response.data && response.data.token) {
         // Guardar el token
         localStorage.setItem('token', response.data.token);
+        // Guardar información del usuario si viene en la respuesta
+        if (response.data.user) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+        }
         // Redirigir al home
         navigate('/');
       }
     } catch (err) {
       console.error('Login error:', err.response || err);
-      setError(err.response?.data?.message || 'Error al iniciar sesión. Por favor, intente nuevamente.');
+      setError(
+        err.response?.data?.message || 
+        'Error al iniciar sesión. Por favor, verifique sus credenciales.'
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,6 +76,7 @@ export default function LoginPage() {
               value={formData.email}
               onChange={handleChange}
               required
+              disabled={loading}
             />
           </Form.Group>
 
@@ -77,6 +88,7 @@ export default function LoginPage() {
               value={formData.password}
               onChange={handleChange}
               required
+              disabled={loading}
             />
           </Form.Group>
 
@@ -84,8 +96,9 @@ export default function LoginPage() {
             type="submit"
             variant="primary"
             className="w-100 text-light"
+            disabled={loading}
           >
-            Login
+            {loading ? 'Iniciando sesión...' : 'Login'}
           </Button>
         </Form>
       </div>
