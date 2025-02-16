@@ -4,10 +4,10 @@ const validation = require('../middleware/validate.js');
 const { verifyToken, isAuthenticated } = require('../middleware/auth.js');
 
 // Obtener un registro por ID (JWT o Passport)
-router.get('/:id', isAuthenticated, verifyToken, validation.checkMongoId, dedicationsController.getSingle);
+router.get('/:id', validation.checkMongoId, dedicationsController.getSingle);
 
 // Obtener todos los registros (JWT o Passport)
-router.get('/', isAuthenticated, verifyToken, dedicationsController.getAll);
+router.get('/', dedicationsController.getAll);
 
 // Crear un nuevo registro (JWT o Passport)
 router.post('/', isAuthenticated, verifyToken, validation.saveTempleDedication, dedicationsController.createDedication);
