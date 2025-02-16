@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext'; // Asegúrate de tener esta importación
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { setUser } = useContext(AuthContext);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -42,12 +44,17 @@ export default function LoginPage() {
       if (response.data && response.data.token) {
         // Guardar el token
         localStorage.setItem('token', response.data.token);
-        // Guardar información del usuario si viene en la respuesta
+        
+        // Guardar y actualizar información del usuario
         if (response.data.user) {
           localStorage.setItem('user', JSON.stringify(response.data.user));
+          // Actualizar el contexto de autenticación
+          setUser(response.data.user);
         }
-        // Redirigir al home
+
+        // Redirigir y forzar refresh
         navigate('/');
+        window.location.reload(); // Esto forzará un refresh completo de la página
       }
     } catch (err) {
       console.error('Login error:', err.response || err);
