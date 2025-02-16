@@ -1,4 +1,3 @@
-// pages/register.js
 import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import axios from 'axios';
@@ -40,7 +39,27 @@ export default function RegisterPage() {
     setFormData(prev => ({ ...prev, [name]: value }));
     
     const error = validateField(name, value);
-    setErrors(prev => ({ ...prev, [name]: error }));
+    setErrors(prev => {
+      const newErrors = { ...prev };
+      if (error) {
+        newErrors[name] = error;
+      } else {
+        delete newErrors[name];
+      }
+      return newErrors;
+    });
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.firstName &&
+      formData.lastName &&
+      formData.email &&
+      formData.password &&
+      formData.confirmPassword &&
+      formData.birthDate &&
+      Object.keys(errors).length === 0
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -158,8 +177,8 @@ export default function RegisterPage() {
           <Button
             type="submit"
             variant="primary"
-            className="w-100"
-            disabled={Object.keys(errors).length > 0}
+            className="w-100 text-light"
+            disabled={!isFormValid()}
           >
             Register
           </Button>
