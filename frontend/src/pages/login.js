@@ -1,49 +1,51 @@
-// pages/login.js
 import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: ''
   });
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError("");
-
-    try {
-      const response = await axios.post(
-        "https://chronocanvas-api.onrender.com/auth/login",
-        formData
-      );
-
-      if (response.data) {
-        // Guardar el token y la información del usuario
-        localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-        // Redirigir a la página principal
-        navigate("/");
-      }
-    } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
-      [name]: value,
+      [name]: value
     }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      const response = await axios.post(
+        'https://chronocanvas-api.onrender.com/auth/login',
+        {
+          email: formData.email,
+          password: formData.password
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.data && response.data.token) {
+        // Guardar el token
+        localStorage.setItem('token', response.data.token);
+        navigate('/');
+      }
+    } catch (err) {
+      console.error('Login error:', err.response || err);
+      setError(err.response?.data?.message || 'Error al iniciar sesión. Por favor, intente nuevamente.');
+    }
   };
 
   return (
@@ -79,10 +81,9 @@ export default function LoginPage() {
           <Button
             type="submit"
             variant="primary"
-            className="w-100"
-            disabled={isLoading}
+            className="w-100 text-light"
           >
-            {isLoading ? "Logging in..." : "Login"}
+            Login
           </Button>
         </Form>
       </div>
