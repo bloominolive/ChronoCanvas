@@ -3,10 +3,10 @@ const historyController = require('../controllers/ldsChurchHistory.js');
 const validation = require('../middleware/validate.js');
 const { verifyToken, isAuthenticated } = require('../middleware/auth.js');
 // Obtener un registro por ID (JWT o Passport)
-router.get('/:id', isAuthenticated, verifyToken, validation.checkMongoId, historyController.getSingle);
+router.get('/:id', validation.checkMongoId, historyController.getSingle);
 
 // Obtener todos los registros (JWT o Passport)
-router.get('/', isAuthenticated, verifyToken, historyController.getAll);
+router.get('/', historyController.getAll);
 
 // Crear un nuevo registro (JWT o Passport)
 router.post('/', isAuthenticated, verifyToken, validation.saveChurchHistory, historyController.createHistory);
