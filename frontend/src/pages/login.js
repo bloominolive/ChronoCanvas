@@ -24,13 +24,14 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const response = await axios.post(
+      // Usando GET con los parámetros en la URL
+      const response = await axios.get(
         'https://chronocanvas-api.onrender.com/auth/login',
         {
-          email: formData.email,
-          password: formData.password
-        },
-        {
+          params: {
+            email: formData.email,
+            password: formData.password
+          },
           headers: {
             'Content-Type': 'application/json'
           }
@@ -40,6 +41,7 @@ export default function LoginPage() {
       if (response.data && response.data.token) {
         // Guardar el token
         localStorage.setItem('token', response.data.token);
+        // Redirigir al home
         navigate('/');
       }
     } catch (err) {
