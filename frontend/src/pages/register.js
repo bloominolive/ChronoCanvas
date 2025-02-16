@@ -81,7 +81,7 @@ export default function RegisterPage() {
         birthDate: formattedDate
       };
 
-      const response = await axios.post('https://chronocanvas-api.onrender.com/users/', requestData, {
+      const response = await axios.post('https://chronocanvas-api.onrender.com/auth/register/', requestData, {
         headers: {
           'Content-Type': 'application/json'
         }
