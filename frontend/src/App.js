@@ -6,10 +6,7 @@ import Home from './pages/home';
 import DualDateComparison from './pages/dual-date';
 import LoginPage from './pages/login';
 import RegisterPage from './pages/register';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-
-
 
 export default function App() {
   return (
@@ -17,18 +14,16 @@ export default function App() {
       <div className="App app-background body">
         <Navbar />
         <div className='main pt-5 mt-1 mt-sm-5'>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Home /> } />
-            <Route path="/login" element={<LoginPage /> } />
-            <Route path="/register" element={<RegisterPage /> } />
-            <Route path="/compare" element={<DualDateComparison /> } />
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route path="/compare" element={<DualDateComparison />} />
+            </Routes>
           </AuthProvider>
         </div>
       </div>
     </Router>
   );
 }
-
-
