@@ -70,28 +70,32 @@ export default function RegisterPage() {
     }
 
     try {
-      // Formatear la fecha antes de enviarla
-      const formattedDate = new Date(formData.birthDate).toISOString();
-
       const requestData = {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
         password: formData.password,
-        birthDate: formattedDate
+        birthDate: formData.birthDate
       };
 
-      const response = await axios.post('https://chronocanvas-api.onrender.com/auth/register/', requestData, {
+      const config = {
         headers: {
           'Content-Type': 'application/json'
         }
-      });
+      };
 
-      if (response.status === 201) {
+      const response = await axios.post(
+        'https://chronocanvas-api.onrender.com/auth/register/',
+        requestData,
+        config
+      );
+
+      if (response.status === 201 || response.status === 200) {
+        console.log('Registration successful:', response.data);
         navigate('/login');
       }
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Registration error:', error.response || error);
       setSubmitError(
         error.response?.data?.message || 
         'Registration failed. Please try again.'
