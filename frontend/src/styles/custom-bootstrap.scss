@@ -1,0 +1,32 @@
+// Import Bootstrap functions and variables
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+$theme-colors: (
+"primary": #009FDB,
+"light": #ffffff,
+"dark": #00161b,
+"light-green": #91DC00,
+"light-blue": #01B3F6,
+"lighter-blue": #44c9fa,
+"danger": #e51616,
+"berry": #FF585D, 
+"tangerine": #FFB000,
+"mint": #49EEDC,
+"purple": #AF29BB,
+"light-purple": #db4be8,
+"lighter-purple": #f25eff,
+"cobalt": #0057B8,
+"brown": #7F461B,
+
+);
+$font-family-sans-serif: 'Arial', sans-serif; // Custom font
+
+// Import Bootstrap mixins and the rest of Bootstrap
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/bootstrap";
+
+// Add your custom styles
+body {
+    background-color: #ffffff;
+}
