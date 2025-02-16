@@ -1,12 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext'; // Asegúrate de tener esta importación
+import { useAuth } from '../context/AuthContext'; // Importar el hook useAuth
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const { setUser } = useContext(AuthContext);
+  const { login } = useAuth(); // Usar el hook useAuth
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -42,19 +42,12 @@ export default function LoginPage() {
       );
 
       if (response.data && response.data.token) {
-        // Guardar el token
         localStorage.setItem('token', response.data.token);
-        
-        // Guardar y actualizar información del usuario
         if (response.data.user) {
-          localStorage.setItem('user', JSON.stringify(response.data.user));
-          // Actualizar el contexto de autenticación
-          setUser(response.data.user);
+          // Usar la función login del contexto
+          login(response.data.user);
         }
-
-        // Redirigir y forzar refresh
         navigate('/');
-        window.location.reload(); // Esto forzará un refresh completo de la página
       }
     } catch (err) {
       console.error('Login error:', err.response || err);

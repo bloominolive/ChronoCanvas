@@ -13,13 +13,15 @@ import { faPaintbrush } from "@fortawesome/free-solid-svg-icons";
 import DataMongoDisplay from "../components/data-mongo-display";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
-import DraggableWrapper from "../components/draggable-wrapper"; // import the wrapper
+import DraggableWrapper from "../components/draggable-wrapper";
+import { useAuth } from '../context/AuthContext'; // Importar useAuth
 
 export default function Home() {
   const { data, loading, error, setBirthDate } = useFetchOnDemand();
   const { data: data1, setEndpoint: setEndpoint1 } = useFetchMongoOnDemand();
   const { data: data2, setEndpoint: setEndpoint2 } = useFetchMongoOnDemand();
   const [displayDate, setDisplayDate] = useState(null);
+  const { user, logout } = useAuth(); // Usar el hook useAuth
   const navigate = useNavigate();
 
   const handleDownloadPDF = () => {
@@ -35,7 +37,6 @@ export default function Home() {
 
         let position = 0; 
 
-        // If content is larger than one page, split it into multiple pages
         while (position < imgHeight) {
           pdf.addImage(imgData, "PNG", 0, position * -1, imgWidth, imgHeight);
           position += pageHeight;
@@ -51,9 +52,8 @@ export default function Home() {
   };
 
   const handleDateSelect = (date, nonformattedDate) => {
-    setDisplayDate(date); // Update state with selected date
+    setDisplayDate(date);
     setBirthDate(date);
-    console.log("testing", nonformattedDate);
     setEndpoint1(`ldschurchhistory/public?date=${nonformattedDate}`);
     setEndpoint2(`templeDedications/public?date=${nonformattedDate}`);
   };
@@ -70,15 +70,19 @@ export default function Home() {
     navigate(`/register`);
   };
 
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   useEffect(() => {
     const date = new Date();
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
 
     const formattedDate = `${year}-${month}-${day}`;
     const today = new Date();
-    console.log("testing", today);
     setEndpoint1(`ldschurchhistory/public?date=${formattedDate}`);
     setEndpoint2(`templeDedications/public?date=${formattedDate}`);
     const formattedToday = `${String(today.getMonth() + 1).padStart(2, "0")}/${String(
@@ -94,7 +98,7 @@ export default function Home() {
     <>
       <div className="bg-tangerine header-background mx-auto rounded">
         <h1 className="text-light fst-italic fw-bold mt-5 mb-0 text-center">
-          Welcome!
+          {user ? `Welcome, ${user.name}!` : 'Welcome!'}
         </h1>
         <small className="d-block text-center">
           Enter your birthday to paint your day!
@@ -119,7 +123,6 @@ export default function Home() {
         <Container className="my-5">
           {error && <p className="text-danger text-center">{error}</p>}
 
-          {/* Display Selected Date with "Painted For You!" */}
           {data && displayDate && (
             <>
               <h2 className="text-center mt-2 mb-5 squiggle-underline">
@@ -132,21 +135,19 @@ export default function Home() {
 
           {data && (
             <Row className="g-3 pb-5 bg-light border border-brown border-3">
-              {/* SVG Display: 2 Rows High, Takes 8 Cols */}
               <Col lg={8} className="d-flex flex-column justify-content-center mb-3">
-              <DraggableWrapper>
-                <SvgDisplay
-                  title="Your ChronoCanvas"
-                  image={data.svg}
-                  imgDescription={<span>{data.imgDescription}</span>}
-                  descriptionStyle={{
-                    top: "94%",
-                  }}
-                />
+                <DraggableWrapper>
+                  <SvgDisplay
+                    title="Your ChronoCanvas"
+                    image={data.svg}
+                    imgDescription={<span>{data.imgDescription}</span>}
+                    descriptionStyle={{
+                      top: "94%",
+                    }}
+                  />
                 </DraggableWrapper>
               </Col>
 
-              {/* Birthstone */}
               <Col lg={4}>
                 <DraggableWrapper>
                   <DataDisplay
@@ -157,7 +158,6 @@ export default function Home() {
                 </DraggableWrapper>
               </Col>
 
-              {/* Western Zodiac */}
               <Col lg={4}>
                 <DraggableWrapper>
                   <DataDisplay
@@ -168,7 +168,6 @@ export default function Home() {
                 </DraggableWrapper>
               </Col>
 
-              {/* Chinese Zodiac */}
               <Col lg={4}>
                 <DraggableWrapper>
                   <DataDisplay
@@ -179,7 +178,6 @@ export default function Home() {
                 </DraggableWrapper>
               </Col>
 
-              {/* Closest Temple Dedication */}
               <Col lg={4}>
                 <DraggableWrapper>
                   <DataMongoDisplay
@@ -193,7 +191,6 @@ export default function Home() {
                 </DraggableWrapper>
               </Col>
 
-              {/* Birth Flower */}
               <Col lg={4}>
                 <DraggableWrapper>
                   <DataDisplay
@@ -207,7 +204,6 @@ export default function Home() {
                 </DraggableWrapper>
               </Col>
 
-              {/* Closest Church History */}
               <Col lg={4}>
                 <DraggableWrapper>
                   <DataMongoDisplay
@@ -228,12 +224,20 @@ export default function Home() {
         </Container>
       </div>
       <div className="d-flex text-light">
-        <Button className="me-3 text-light" onClick={handleLoginClick}>
-          Login
-        </Button>
-        <Button className="text-light" onClick={handleRegisterClick}>
-          Register
-        </Button>
+        {!user ? (
+          <>
+            <Button className="me-3 text-light" onClick={handleLoginClick}>
+              Login
+            </Button>
+            <Button className="text-light" onClick={handleRegisterClick}>
+              Register
+            </Button>
+          </>
+        ) : (
+          <Button className="text-light" onClick={handleLogout}>
+            Logout
+          </Button>
+        )}
       </div>
     </>
   );
