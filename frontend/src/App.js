@@ -11,19 +11,19 @@ import { AuthProvider } from './context/AuthContext';
 export default function App() {
   return (
     <Router>
-      <div className="App app-background body">
-        <Navbar />
-        <div className='main pt-5 mt-1 mt-sm-5'>
-          <AuthProvider>
+      <AuthProvider>
+        <div className="App app-background body">
+          <Navbar />
+          <div className='main pt-5 mt-1 mt-sm-5'>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/compare" element={<DualDateComparison />} />
             </Routes>
-          </AuthProvider>
+          </div>
         </div>
-      </div>
+      </AuthProvider>
     </Router>
   );
 }
