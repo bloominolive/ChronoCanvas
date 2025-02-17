@@ -24,7 +24,6 @@ router.get('/templeDedications', require('../controllers/templeDedications').get
 router.get('/templeDedications/:id', require('../controllers/templeDedications').getSingle);
 
 
-
 // ✅ Ruta de autenticación con GitHub
 router.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
 

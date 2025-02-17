@@ -7,7 +7,7 @@ const { verifyToken, isAuthenticated } = require('../middleware/auth.js');
 router.get('/:id', isAuthenticated, verifyToken, validation.checkMongoId, dedicationsController.getSingle);
 
 // Obtener todos los registros (JWT o Passport)
-router.get('/', dedicationsController.getAll);
+router.get('/', isAuthenticated, verifyToken, dedicationsController.getAll);
 
 // Crear un nuevo registro (JWT o Passport)
 router.post('/', isAuthenticated, verifyToken, validation.saveTempleDedication, dedicationsController.createDedication);
