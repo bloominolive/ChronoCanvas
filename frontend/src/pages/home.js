@@ -227,14 +227,7 @@ export default function Home() {
           <PaintApp />
         </Container>
       </div>
-      <div className="d-flex text-light">
-        <Button className="me-3 text-light" onClick={handleLoginClick}>
-          Login
-        </Button>
-        <Button className="text-light" onClick={handleRegisterClick}>
-          Register
-        </Button>
-      </div>
+   
     </>
   );
 }
