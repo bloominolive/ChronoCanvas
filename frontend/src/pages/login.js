@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Container, Form, Button, Alert } from "react-bootstrap";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -28,10 +30,7 @@ export default function LoginPage() {
     try {
       const response = await axios.post(
         'https://chronocanvas-api.onrender.com/auth/login',
-        {
-          email: formData.email,
-          password: formData.password
-        },
+        formData,
         {
           headers: {
             'Content-Type': 'application/json'
@@ -40,14 +39,13 @@ export default function LoginPage() {
       );
 
       if (response.data && response.data.token) {
-        // Guardar el token
-        localStorage.setItem('token', response.data.token);
-        // Guardar información del usuario si viene en la respuesta
-        if (response.data.user) {
-          localStorage.setItem('user', JSON.stringify(response.data.user));
-        }
-        // Redirigir al home
-        navigate('/');
+        // Usar el contexto para manejar el login
+        login(response.data.user, response.data.token);
+        
+        // Primero actualizar el estado, luego navegar
+        setTimeout(() => {
+          navigate('/', { replace: true });
+        }, 0);
       }
     } catch (err) {
       console.error('Login error:', err.response || err);

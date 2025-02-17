@@ -1,25 +1,17 @@
 // components/navbar.js
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import { useAuth } from '../context/AuthContext';  // Importamos el hook de autenticación
 import logo from '../images/ChronoCanvasLogo.png';
 import navbarBackground from '../images/navbarBackground.png';
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const userStr = localStorage.getItem('user');
-    if (userStr) {
-      setUser(JSON.parse(userStr));
-    }
-  }, []);
+  const { user, logout } = useAuth();  // Usamos el contexto en lugar del estado local
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
+    logout();  // Usamos la función de logout del contexto
     navigate('/');
   };
 
